@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace Service
 {
-    public class UserServices: IUserServices
+    public class UserServices : IUserServices
     {
         private readonly UserRepository _userRepository;
 
@@ -21,7 +21,7 @@ namespace Service
         {
             _userRepository = userRepository;
         }
-        public User CreateUser(UserRegistrationDTO registrationDto )
+        public User CreateUser(UserRegistrationDTO registrationDto)
         {
             // Crear un nuevo usuario
             var user = new User
@@ -30,7 +30,7 @@ namespace Service
                 Password = registrationDto.Password,
                 Email = registrationDto.Email,
                 SubscriptionId = registrationDto.SubscriptionId,
-                IsActive = true
+                canMakeConversions = true
             };
 
             _userRepository.AddUser(user);
@@ -69,7 +69,7 @@ namespace Service
             // Desactivar usuario si excede el límite
             if (user.ConversionsUsed >= user.Subscription.MaxConversions)
             {
-                user.IsActive = false;
+                user.canMakeConversions = false;
             }
 
             // Actualizar en el repositorio
@@ -83,12 +83,12 @@ namespace Service
         {
             var handler = new JwtSecurityTokenHandler();
 
-            // Verifica si el token es legible
+            
             if (handler.CanReadToken(token))
             {
                 var jwtToken = handler.ReadJwtToken(token);
 
-                // Busca el claim "sub"
+                
                 var userIdClaim = jwtToken.Claims.FirstOrDefault(claim => claim.Type == "sub")?.Value;
 
                 if (int.TryParse(userIdClaim, out int userId))
@@ -105,6 +105,23 @@ namespace Service
         {
             return _userRepository.Update(user);
         }
+
+        public bool CanConvert(int userId)
+        {
+            var user = _userRepository.GetById(userId);
+            if (user.Subscription != null && user.canMakeConversions)
+            {
+                if (user.ConversionsUsed >= user.Subscription.MaxConversions)
+                {
+                    user.canMakeConversions = false; // Desactivar excedió el límite
+                    _userRepository.Update(user); // Actualizar el estado en la base de datos
+                    return false;
+                }
+                return true; // Puede realizar conversiones
+            }
+            return false; // No puede realizar conversiones si no tiene una suscripción válida o está inactivo
+
+        }
+
     }
-   
 }

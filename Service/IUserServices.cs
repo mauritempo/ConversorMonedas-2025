@@ -19,5 +19,7 @@ namespace Service
 
         int GetUserIdFromToken(string token);
         User UpdateUser(User user);
+
+        bool CanConvert(int userId);
     }
 }

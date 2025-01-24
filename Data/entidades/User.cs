@@ -22,30 +22,11 @@ namespace Data.entidades
         [Required]
         public string Email { get; set; }
         [EmailAddress]
-        public bool IsActive { get; set; }
+        public bool canMakeConversions { get; set; }
         public int SubscriptionId { get; set; }
         public Subscription Subscription { get; set; }  // Relación de usuario con suscripción
-
-        // Propiedad adicional para las conversiones realizadas
         public int ConversionsUsed { get; set; }  // Cantidad de conversiones usadas por el usuario
-
-        // Propiedad calculada para determinar si puede convertir
-        public bool CanConvert
-        {
-            get
-            {
-                if (Subscription != null && IsActive)
-                {
-                    if (ConversionsUsed >= Subscription.MaxConversions)
-                    {
-                        IsActive = false;  // Desactiva al usuario si alcanzó el límite
-                        return false;
-                    }
-                    return true;
-                }
-                return false;
-            }
-        }
+        
     }
 
 

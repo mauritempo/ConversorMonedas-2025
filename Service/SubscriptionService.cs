@@ -37,7 +37,7 @@ namespace Service
             return new UserSubStatusDTO
             {
                 UserId = updatedUser.Id,
-                IsActive = updatedUser.IsActive,
+                IsActive = updatedUser.canMakeConversions,
                 SubscriptionName = updatedUser.Subscription.Name,
                 MaxConversions = updatedUser.Subscription.MaxConversions,
                 ConversionsUsed = conversionsUsed,

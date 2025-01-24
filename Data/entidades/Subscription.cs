@@ -17,7 +17,5 @@ namespace Data.entidades
         public int Id { get; set; }
         public string Name { get; set; }  // Nombre de la suscripción (Free, Trial, Pro)
         public int MaxConversions { get; set; }  // Límite de conversiones para esta suscripción
-
-        public SubscriptionType SubscriptionType { get; set; }
     }
 }

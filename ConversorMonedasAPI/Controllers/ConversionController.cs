@@ -76,7 +76,7 @@ namespace ConversorMonedasAPI.Controllers
         }
 
         
-        // Endpoint para eliminar una moneda (cambio de estado a Baja)
+        // Endpoint para eliminar una moneda (cambio de estado a NonFunctional)
         [HttpDelete("currency/{id}")]
         public IActionResult DeleteCurrency(int id)
         {
@@ -113,10 +113,8 @@ namespace ConversorMonedasAPI.Controllers
             }
 
             // Verificar si el usuario puede realizar la conversión
-            if (!user.CanConvert)
+            if (!_userServices.CanConvert(userId))
             {
-                user.IsActive = false; // Cambiar el estado a inactivo si no puede convertir
-                _userServices.UpdateUser(user); // Actualizar el usuario en la base de datos
                 return BadRequest("No puedes realizar más conversiones. Actualiza tu suscripción.");
             }
 
@@ -135,7 +133,7 @@ namespace ConversorMonedasAPI.Controllers
             // Validar si el usuario ha superado el límite de conversiones
             if (user.ConversionsUsed >= user.Subscription.MaxConversions)
             {
-                user.IsActive = false; // Cambiar el estado a inactivo si superó el límite
+                user.canMakeConversions = false; // Cambiar el estado a inactivo si superó el límite
                 _userServices.UpdateUser(user); // Actualizar el estado en la base de datos
             }
 

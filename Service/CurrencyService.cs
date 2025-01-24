@@ -41,7 +41,7 @@ namespace Service
         {
             var currency = _currencyRepository.GetCurrencyById(id);
 
-            if (currency == null) // Manejar si la moneda no existe o está en estado Baja
+            if (currency == null) // Manejar si la moneda no existe o está en estado NonFunctional
             {
                 return null;
             }
@@ -64,7 +64,7 @@ namespace Service
              Legend = currencyDto.Legend,      
              Symbol = currencyDto.Symbol,      
              ConvertibilityIndex = currencyDto.ConvertibilityIndex,
-             Status = CurrencyStatus.Alta        
+             Status = CurrencyStatus.Functional        
             };
 
             return _currencyRepository.AddCurrency(currency);
@@ -81,7 +81,7 @@ namespace Service
             existingCurrency.Legend = currencyDto.Legend;
             existingCurrency.Symbol = currencyDto.Symbol;
             existingCurrency.ConvertibilityIndex = currencyDto.ConvertibilityIndex;
-            existingCurrency.Status = CurrencyStatus.Modificacion;
+            existingCurrency.Status = CurrencyStatus.Modification;
 
             _currencyRepository.UpdateCurrency(existingCurrency);
             return true; 
@@ -98,7 +98,7 @@ namespace Service
             existingCurrency.Legend = currencyDto.Legend;
             existingCurrency.Symbol = currencyDto.Symbol;
             existingCurrency.ConvertibilityIndex = currencyDto.ConvertibilityIndex;
-            existingCurrency.Status = CurrencyStatus.Modificacion;
+            existingCurrency.Status = CurrencyStatus.Modification;
 
             _currencyRepository.UpdateCurrency(existingCurrency);
             return true;
@@ -108,24 +108,24 @@ namespace Service
             var existingCurrency = _currencyRepository.GetCurrencyById(id);
             if (existingCurrency == null)
             {
-                return false; // No se encontró la moneda para eliminar
+                return false; 
             }
 
-            // Cambiar estado a Baja en lugar de eliminar físicamente
-            _currencyRepository.DeleteCurrency(id); // Guardar el cambio de estado
-            return true; // Eliminación (cambio de estado) exitoso
+            // Cambiar estado a NonFunctional en lugar de eliminar físicamente
+            _currencyRepository.DeleteCurrency(id); 
+            return true; 
         }
         public ConversionResultDTO ConvertCurrency(ConversionRequestDTO request)
         {
             var fromCurrency = _currencyRepository.GetCurrencyByCode(request.FromCurrencyCode);
             var toCurrency = _currencyRepository.GetCurrencyByCode(request.ToCurrencyCode);
 
-           if (fromCurrency == null|| fromCurrency.Status == CurrencyStatus.Baja)
+           if (fromCurrency == null|| fromCurrency.Status == CurrencyStatus.NonFunctional)
             {
                 return null;
             }
 
-            if (toCurrency == null ||toCurrency.Status == CurrencyStatus.Baja )
+            if (toCurrency == null ||toCurrency.Status == CurrencyStatus.NonFunctional )
             {
                 return null;
             }

@@ -19,16 +19,16 @@ namespace Data.repository
         public IEnumerable<CUrrency> GetGlobalCurrencies()
         {
             return _context.currencyConversions
-            .Where(c => c.Status != CurrencyStatus.Baja)
+            .Where(c => c.Status != CurrencyStatus.NonFunctional)
             .ToList();
         }
         
         public CUrrency GetCurrencyById(int id)
         {
             var currency = _context.currencyConversions.Find(id);
-            if (currency != null && currency.Status == CurrencyStatus.Baja)
+            if (currency != null && currency.Status == CurrencyStatus.NonFunctional)
             {
-                return null; // Retorna null si está en estado Baja
+                return null; // Retorna null si está en estado NonFunctional
             }
 
             return (currency);
@@ -36,9 +36,9 @@ namespace Data.repository
         public CUrrency GetCurrencyByIdDeleted(int id)
         {
             var currency = _context.currencyConversions.Find(id);
-            if (currency != null && currency.Status == CurrencyStatus.Modificacion)
+            if (currency != null && currency.Status == CurrencyStatus.Modification)
             {
-                return null; // Retorna null si está en estado Baja
+                return null; // Retorna null si está en estado NonFunctional
             }
 
             return (currency);
@@ -58,13 +58,13 @@ namespace Data.repository
             return currency;
             
         }
-        //cambio aca
+       
         public CUrrency? DeleteCurrency(int id)
         {
             CUrrency? currency = _context.currencyConversions.Find(id);
             if (currency != null)
             {
-                currency.Status = CurrencyStatus.Baja;
+                currency.Status = CurrencyStatus.NonFunctional;
                 _context.SaveChanges();
             }
             return currency;

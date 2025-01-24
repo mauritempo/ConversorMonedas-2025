@@ -8,10 +8,10 @@ namespace Data.Models
 {
     public enum CurrencyStatus
     {
-        Alta,
-        Baja,
-        Modificacion,
-        Consulta
+        Functional,
+        NonFunctional,
+        Modification,
+        Consultation
 
     }
 }

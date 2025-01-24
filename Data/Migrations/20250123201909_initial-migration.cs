@@ -7,7 +7,7 @@
 namespace Data.Migrations
 {
     /// <inheritdoc />
-    public partial class initialMigration : Migration
+    public partial class initialmigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -36,8 +36,7 @@ namespace Data.Migrations
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     Name = table.Column<string>(type: "TEXT", nullable: false),
-                    MaxConversions = table.Column<int>(type: "INTEGER", nullable: false),
-                    SubscriptionType = table.Column<int>(type: "INTEGER", nullable: false)
+                    MaxConversions = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -53,7 +52,7 @@ namespace Data.Migrations
                     Username = table.Column<string>(type: "TEXT", nullable: false),
                     Password = table.Column<string>(type: "TEXT", nullable: false),
                     Email = table.Column<string>(type: "TEXT", nullable: false),
-                    IsActive = table.Column<bool>(type: "INTEGER", nullable: false),
+                    canMakeConversions = table.Column<bool>(type: "INTEGER", nullable: false),
                     SubscriptionId = table.Column<int>(type: "INTEGER", nullable: false),
                     ConversionsUsed = table.Column<int>(type: "INTEGER", nullable: false)
                 },
@@ -70,12 +69,12 @@ namespace Data.Migrations
 
             migrationBuilder.InsertData(
                 table: "Subscriptions",
-                columns: new[] { "Id", "MaxConversions", "Name", "SubscriptionType" },
+                columns: new[] { "Id", "MaxConversions", "Name" },
                 values: new object[,]
                 {
-                    { 1, 5, "Free", 0 },
-                    { 2, 100, "Trial", 0 },
-                    { 3, 2147483647, "Pro", 0 }
+                    { 1, 5, "Free" },
+                    { 2, 100, "Trial" },
+                    { 3, 2147483647, "Pro" }
                 });
 
             migrationBuilder.CreateIndex(

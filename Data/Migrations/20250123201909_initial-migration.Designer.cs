@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Data.Migrations
 {
     [DbContext(typeof(MonedasContext))]
-    [Migration("20241202132100_initialMigration")]
-    partial class initialMigration
+    [Migration("20250123201909_initial-migration")]
+    partial class initialmigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -61,9 +61,6 @@ namespace Data.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("SubscriptionType")
-                        .HasColumnType("INTEGER");
-
                     b.HasKey("Id");
 
                     b.ToTable("Subscriptions");
@@ -73,22 +70,19 @@ namespace Data.Migrations
                         {
                             Id = 1,
                             MaxConversions = 5,
-                            Name = "Free",
-                            SubscriptionType = 0
+                            Name = "Free"
                         },
                         new
                         {
                             Id = 2,
                             MaxConversions = 100,
-                            Name = "Trial",
-                            SubscriptionType = 0
+                            Name = "Trial"
                         },
                         new
                         {
                             Id = 3,
                             MaxConversions = 2147483647,
-                            Name = "Pro",
-                            SubscriptionType = 0
+                            Name = "Pro"
                         });
                 });
 
@@ -105,9 +99,6 @@ namespace Data.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("INTEGER");
-
                     b.Property<string>("Password")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -118,6 +109,9 @@ namespace Data.Migrations
                     b.Property<string>("Username")
                         .IsRequired()
                         .HasColumnType("TEXT");
+
+                    b.Property<bool>("canMakeConversions")
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 

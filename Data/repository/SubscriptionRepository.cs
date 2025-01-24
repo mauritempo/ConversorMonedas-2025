@@ -36,7 +36,7 @@ namespace Data.repository
                 return null;
 
             user.SubscriptionId = subscriptionId;
-            user.IsActive = true;
+            user.canMakeConversions = true;
             _context.SaveChanges();
 
             return user;
