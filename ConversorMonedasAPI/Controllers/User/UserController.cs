@@ -44,7 +44,8 @@ namespace ConversorMonedasAPI.Controllers.User
 
             var claimsForToken = new List<Claim>();
             claimsForToken.Add(new Claim("sub", user.Id.ToString()));
-            claimsForToken.Add(new Claim("state", user.canMakeConversions.ToString()));
+            claimsForToken.Add(new Claim("state", user.IsAdmin.ToString()));
+            claimsForToken.Add(new Claim("check", user.canMakeConversions.ToString()));
             claimsForToken.Add(new Claim("Name", user.Username));
 
             var jwtSecurityToken = new JwtSecurityToken(

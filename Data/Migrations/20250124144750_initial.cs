@@ -7,7 +7,7 @@
 namespace Data.Migrations
 {
     /// <inheritdoc />
-    public partial class initialmigration : Migration
+    public partial class initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -54,7 +54,8 @@ namespace Data.Migrations
                     Email = table.Column<string>(type: "TEXT", nullable: false),
                     canMakeConversions = table.Column<bool>(type: "INTEGER", nullable: false),
                     SubscriptionId = table.Column<int>(type: "INTEGER", nullable: false),
-                    ConversionsUsed = table.Column<int>(type: "INTEGER", nullable: false)
+                    ConversionsUsed = table.Column<int>(type: "INTEGER", nullable: false),
+                    IsAdmin = table.Column<bool>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {

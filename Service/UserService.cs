@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -21,9 +22,37 @@ namespace Service
         {
             _userRepository = userRepository;
         }
+        public bool IsAdmin(int userId)
+        {
+
+            var user = _userRepository.GetById(userId);
+            if (user == null) throw new ArgumentException("Usuario no encontrado.");
+            return user.IsAdmin;
+        }
+        public User CreateAdminUser(AdminUserDTO adminUserDTO)
+        {
+            
+
+            // Crear la entidad de usuario administrador
+            var adminUser = new User
+            {
+                Username = adminUserDTO.Username,
+                Password = adminUserDTO.Password, 
+                Email = adminUserDTO.Email,
+                canMakeConversions = true,
+                IsAdmin = true,
+                ConversionsUsed = 0,
+                SubscriptionId = 3 
+            };
+
+            // Guardar en la base de datos
+            _userRepository.AddUser(adminUser);
+
+            return adminUser;
+        }
         public User CreateUser(UserRegistrationDTO registrationDto)
         {
-            // Crear un nuevo usuario
+            
             var user = new User
             {
                 Username = registrationDto.Username,
@@ -45,16 +74,16 @@ namespace Service
 
         public User ValidateUser(string username, string password)
         {
-            // Buscar el usuario por nombre de usuario
+            
             var user = _userRepository.GetUserByUsername(username);
 
-            // Verificar que el usuario existe y la contraseña es correcta
+            
             if (user != null && user.Password == password)
             {
-                return user; // Devolver el usuario si las credenciales son válidas
+                return user; 
             }
 
-            return null; // Devolver null si las credenciales no son válidas
+            return null; 
         }
         public User IncrementConversionsUsed(int userId)
         {
@@ -82,7 +111,7 @@ namespace Service
         public int GetUserIdFromToken(string token)
         {
             var handler = new JwtSecurityTokenHandler();
-
+            
             
             if (handler.CanReadToken(token))
             {
@@ -103,7 +132,22 @@ namespace Service
 
         public User UpdateUser(User user)
         {
+            
             return _userRepository.Update(user);
+        }
+        public User UpdateUser(UpdateAdminDTO user, int adminUserId)
+        {
+            if (!IsAdmin(adminUserId))
+            {
+                throw new UnauthorizedAccessException("No tienes permisos para actualizar usuarios.");
+            }
+            var existingUser = _userRepository.GetById(user.Id);
+            if (existingUser == null)
+            {
+                throw new ArgumentException("Usuario no encontrado.");
+            }
+            _userRepository.Update(existingUser);
+            return existingUser;
         }
 
         public bool CanConvert(int userId)
@@ -121,6 +165,19 @@ namespace Service
             }
             return false; // No puede realizar conversiones si no tiene una suscripción válida o está inactivo
 
+        }
+        public void DeactivateUser(int userId, int adminUserId)
+        {
+            if (!IsAdmin(adminUserId))
+            {
+                throw new UnauthorizedAccessException("No tienes permisos para desactivar usuarios.");
+            }
+
+            var user = _userRepository.GetById(userId);
+            if (user == null) throw new ArgumentException("Usuario no encontrado.");
+
+            user.canMakeConversions = false;
+            _userRepository.Update(user);
         }
 
     }

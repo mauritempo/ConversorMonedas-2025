@@ -26,6 +26,8 @@ namespace Data.entidades
         public int SubscriptionId { get; set; }
         public Subscription Subscription { get; set; }  // Relación de usuario con suscripción
         public int ConversionsUsed { get; set; }  // Cantidad de conversiones usadas por el usuario
+
+        public bool IsAdmin { get; set; }
         
     }
 
